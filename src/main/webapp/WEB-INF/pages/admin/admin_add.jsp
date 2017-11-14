@@ -6,12 +6,14 @@ Time: 上午11:46
 To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isELIgnored="false" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>云科技</title>
         <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global.css" />
         <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global_color.css" />
+        <script src="../../../js/jquery-3.2.1.js"></script>
         <script language="javascript" type="text/javascript">
             //保存成功的提示消息
             function showResult() {
@@ -25,6 +27,19 @@ To change this template use File | Settings | File Templates.
                 else
                     divResult.style.display = "none";
             }
+            $(document).ready(function () {
+                $.ajax({
+                    url:"/admin/findAllRol",
+                    type: "get",
+                    async: false,
+                    dataType: "json",
+                    success:function (posts) {
+                        for (var i = 0; i < posts.length; i++) {
+                            $("#rolBox").append(" <li><input id='"+posts[i].rolId+"' class='rolId' name='rolId' value='"+posts[i].rolId+"' type='checkbox'/>"+posts[i].rolName+"</li>");
+                        }
+                    }
+                });
+            })
         </script>
     </head>
     <body>
@@ -53,61 +68,54 @@ To change this template use File | Settings | File Templates.
         <!--主要区域开始-->
         <div id="main">            
             <div id="save_result_info" class="save_success">保存成功！</div>
-            <form action="" method="" class="main_form">
+            <form action="/admin/add" method="/post" class="main_form">
                     <div class="text_info clearfix"><span>姓名：</span></div>
                     <div class="input_info">
-                        <input type="text" />
+                        <input type="text" name="admName"/>
                         <span class="required">*</span>
                         <div class="validate_msg_long">20长度以内的汉字、字母、数字的组合</div>
                     </div>
                     <div class="text_info clearfix"><span>管理员账号：</span></div>
                     <div class="input_info">
-                        <input type="text"  />
+                        <input type="text" name="admLoginName"/>
                         <span class="required">*</span>
                         <div class="validate_msg_long">30长度以内的字母、数字和下划线的组合</div>
                     </div>
                     <div class="text_info clearfix"><span>密码：</span></div>
                     <div class="input_info">
-                        <input type="password"  />
+                        <input type="password" name="admLoginPwd"/>
                         <span class="required">*</span>
                         <div class="validate_msg_long error_msg">30长度以内的字母、数字和下划线的组合</div>
                     </div>
                     <div class="text_info clearfix"><span>重复密码：</span></div>
                     <div class="input_info">
-                        <input type="password"  />
+                        <input type="password" name="admLoginPwd2"  />
                         <span class="required">*</span>
                         <div class="validate_msg_long error_msg">两次密码必须相同</div>
                     </div>      
                     <div class="text_info clearfix"><span>电话：</span></div>
                     <div class="input_info">
-                        <input type="text" class="width200"/>
+                        <input type="text" name="admPhone" class="width200"/>
                         <span class="required">*</span>
                         <div class="validate_msg_medium error_msg">正确的电话号码格式：手机或固话</div>
                     </div>
                     <div class="text_info clearfix"><span>Email：</span></div>
                     <div class="input_info">
-                        <input type="text" class="width200"/>
+                        <input type="text" name="admEmail" class="width200"/>
                         <span class="required">*</span>
                         <div class="validate_msg_medium error_msg">50长度以内，正确的 email 格式</div>
                     </div>
                     <div class="text_info clearfix"><span>角色：</span></div>
                     <div class="input_info_high">
                         <div class="input_info_scroll">
-                            <ul>
-                                <li><input type="checkbox"  />超级管理员</li>
-                                <li><input type="checkbox" />账务账号管理员</li>
-                                <li><input type="checkbox" />业务账号管理员</li>
-                                <li><input type="checkbox" />账务账号管理员</li>
-                                <li><input type="checkbox" />业务账号管理员</li>
-                                <li><input type="checkbox" />账务账号管理员</li>
-                                <li><input type="checkbox" />业务账号管理员</li>
+                            <ul id="rolBox">
                             </ul>
                         </div>
                         <span class="required">*</span>
                         <div class="validate_msg_tiny error_msg">至少选择一个</div>
                     </div>
                     <div class="button_info clearfix">
-                        <input type="button" value="保存" class="btn_save" onclick="showResult();" />
+                        <input type="submit" value="保存" class="btn_save" onclick="showResult();" />
                         <input type="button" value="取消" class="btn_save" />
                     </div>
                 </form>  

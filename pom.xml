@@ -97,14 +97,15 @@
       <artifactId>c3p0</artifactId>
       <version>0.9.2.1</version>
     </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>commons-collections</groupId>-->
+      <!--<artifactId>commons-collections</artifactId>-->
+      <!--<version>3.2.1</version>-->
+    <!--</dependency>-->
+    <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils-core -->
     <dependency>
       <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
+      <artifactId>commons-beanutils-core</artifactId>
       <version>1.8.3</version>
     </dependency>
     <dependency>
@@ -116,35 +117,41 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>5.3.5.Final</version>
+      <version>4.3.0.Final</version>
     </dependency>
+
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>1.1.0.Final</version>
+      <version>1.0.0.GA</version>
     </dependency>
+
+    <!--&lt;!&ndash;log4j&ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>log4j</groupId>-->
+      <!--<artifactId>log4j</artifactId>-->
+      <!--<version>1.2.14</version>-->
+    <!--</dependency>-->
+
   </dependencies>
   <build>
     <finalName>ssm2</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-    </plugins>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                  <source>1.6</source>
+                  <target>1.6</target>
+              </configuration>
+          </plugin>
+      </plugins>
     <resources>
-      <!--配置源码路径-->
       <resource>
         <directory>src/main/java</directory>
         <filtering>false</filtering>
-        <!--配置java除了包含.java文件还包含.xml和.properties-->
         <includes>
           <include>**/*.xml</include>
-          <include>**/*.properties</include>
         </includes>
       </resource>
     </resources>

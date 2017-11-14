@@ -1,4 +1,4 @@
-package com.xing.domain;
+package com.xing.domin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ public class Role {
     public Role() {
     }
 
-    public Role(String rolName, String rolContent) {
+    public Role(String rolId,String rolName) {
+        this.rolId = rolId;
         this.rolName = rolName;
-        this.rolContent = rolContent;
     }
 
     public Role(String rolId, String rolName, String rolContent) {

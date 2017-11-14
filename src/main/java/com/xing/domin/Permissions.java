@@ -1,4 +1,4 @@
-package com.xing.domain;
+package com.xing.domin;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,6 +15,10 @@ public class Permissions {
     private String perContent;
 
     public Permissions() {
+    }
+
+    public Permissions(String perId) {
+        this.perId = perId;
     }
 
     public Permissions(String perName, String perContent) {

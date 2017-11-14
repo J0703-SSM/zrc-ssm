@@ -1,5 +1,6 @@
-package com.xing.domain;
+package com.xing.domin;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,18 +20,32 @@ public class Admin {
     /** 管理员注册确认密码*/
     private String admLoginPwd2;
     /** 管理员电话*/
-    private Integer admPhone;
+    private String admPhone;
     /** 管理员Email*/
     private String admEmail;
+    /** 授权时间 */
     private Date authorizationTime;
 
     /** 管理员拥有的角色*/
     private List<Role> rolList = new ArrayList<Role>();
 
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "admId='" + admId + '\'' +
+                ", admName='" + admName + '\'' +
+                ", admLoginName='" + admLoginName + '\'' +
+                ", admLoginPwd='" + admLoginPwd + '\'' +
+                ", admLoginPwd2='" + admLoginPwd2 + '\'' +
+                ", admPhone='" + admPhone + '\'' +
+                ", admEmail='" + admEmail + '\'' +
+                '}';
+    }
+
     public Admin() {
     }
 
-    public Admin(String admName, String admLoginName, String admLoginPwd, String admLoginPwd2, Integer admPhone, String admEmail) {
+    public Admin(String admName, String admLoginName, String admLoginPwd, String admLoginPwd2, String admPhone, String admEmail) {
         this.admName = admName;
         this.admLoginName = admLoginName;
         this.admLoginPwd = admLoginPwd;
@@ -39,14 +54,14 @@ public class Admin {
         this.admEmail = admEmail;
     }
 
-    public Admin(String admId, String admName, String admLoginName, String admLoginPwd, String admLoginPwd2, Integer admPhone, String admEmail) {
+    public Admin(String admId, String admName, String admLoginName, String admLoginPwd, String admPhone, String admEmail, Date authorizationTime) {
         this.admId = admId;
         this.admName = admName;
         this.admLoginName = admLoginName;
         this.admLoginPwd = admLoginPwd;
-        this.admLoginPwd2 = admLoginPwd2;
         this.admPhone = admPhone;
         this.admEmail = admEmail;
+        this.authorizationTime = authorizationTime;
     }
 
     public String getAdmId() {
@@ -89,11 +104,11 @@ public class Admin {
         this.admLoginPwd2 = admLoginPwd2;
     }
 
-    public Integer getAdmPhone() {
+    public String getAdmPhone() {
         return admPhone;
     }
 
-    public void setAdmPhone(Integer admPhone) {
+    public void setAdmPhone(String admPhone) {
         this.admPhone = admPhone;
     }
 
