@@ -87,13 +87,56 @@ To change this template use File | Settings | File Templates.
         </div>
         <!--分页-->
         <div id="pages">
-            <a href="#">上一页</a>
-            <a href="#" class="current_page">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">下一页</a>
+            第${pg.pageCode}页/共${pg.totalPage}页
+            <a href="<c:url value="/role/role_list?method=${pg.url}&pageCode=1"/>">首页</a>
+            <c:choose>
+                <c:when test="${pg.pageCode > 1}">
+                    <a href="<c:url value="/role/role_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
+                </c:when>
+                <c:otherwise>
+                    上一页
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${pg.totalPage < 9}">
+                    <c:set var="begin" value="-1"/>
+                    <c:out value="${begin}"/>
+                    <c:set var="end" value="${pg.totalPage}"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="begin" value="${pg.pageCode - 4}"/>
+                    <c:set var="end" value="${pg.pageCode + 4}"/>
+                    <%-- 头溢出 --%>
+                    <c:if test="${begin < 1}">
+                        <c:set var="begin" value="-1"/>
+                        <c:set var="end" value="9"/>
+                    </c:if>
+                    <%-- 尾溢出 --%>
+                    <c:if test="${end > pg.totalPage}">
+                        <c:set var="begin" value="${pg.totalPage-8}"/>
+                        <c:set var="end" value="${pg.totalPage}"/>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
+            <%-- ??? 我的天,错哪了 --%>
+            <%--<c:forEach begin="${begin}" end="${end}" step="1" var="i">--%>
+                <%--<c:choose>--%>
+                    <%--<c:when test="${pg.pageCode eq i}">--%>
+                        <%--[${i}]--%>
+                    <%--</c:when>--%>
+                    <%--<c:otherwise>--%>
+                        <%--<a href="<c:url value="/role/role_list?pageCode=${i}"/>">${i}</a>--%>
+                    <%--</c:otherwise>--%>
+                <%--</c:choose>--%>
+            <%--</c:forEach>--%>
+            <c:choose>
+                <c:when test="${pg.pageCode < pg.totalPage}">
+                    <a href="<c:url value="/role/role_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
+                </c:when>
+                <c:otherwise>
+                    下一页
+                </c:otherwise>
+            </c:choose>
         </div>
     </form>
 </div>

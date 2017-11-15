@@ -37,7 +37,6 @@
         <!-- 配置视图解析的后缀 -->
         <property name="suffix" value=".jsp"/>
     </bean>
-
     <!-- 引入db属性文件 -->
     <context:property-placeholder location="classpath:db.properties"/>
     <!-- 1. 配置数据源 -->
@@ -53,7 +52,7 @@
           class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!-- 引入mybatis的配置文件 -->
-        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath*:com/xing/*/mapper/*.xml"/>
     </bean>
     <!-- 3. 配置事物 -->
     <bean id="transactionManager"
@@ -69,23 +68,24 @@
     </tx:advice>
     <!-- 5. 配置切面 -->
     <aop:config>
-        <aop:pointcut id="pointcut" expression="execution(* com.xing.mapper.*.*(..))"/>
+        <aop:pointcut id="pointcut" expression="execution(* com.xing.*.service.*.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
     </aop:config>
     <!-- 6. 配置mybatis中的mapper接口自动扫描 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- mapper接口代理对象所在的类-->
-        <property name="basePackage" value="com.xing.mapper"/>
+        <property name="basePackage" value="com.xing.*.mapper"/>
         <!-- 定义sessionFactory,引用上面配置的工厂对象 -->
         <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
     </bean>
+
 
     <!--&lt;!&ndash; 配置拦截器 &ndash;&gt;-->
     <!--<mvc:interceptors>-->
     <!--&lt;!&ndash; 拦截器执行的执行顺序依照下面的加入顺序执行 &ndash;&gt;-->
     <!--<mvc:interceptor>-->
     <!--<mvc:mapping path="/**"/>-->
-    <!--<bean class="com.xing.interceptor.LoginInterceptor"/>-->
+    <!--<bean class="com.xing.base.interceptor.LoginInterceptor"/>-->
     <!--</mvc:interceptor>-->
     <!--</mvc:interceptors>-->
 </beans>

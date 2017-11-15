@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xing.role.mapper.PermissionsMapper">
+    <insert id="addPermissions" parameterType="com.xing.role.domain.Permissions">
+        INSERT INTO permissions (preId,preName,perContent) VALUE (#{preId},#{preName},#{perContent})
+    </insert>
+    <select id="findAllPer" resultType="com.xing.role.domain.Permissions">
+        SELECT * FROM permissions;
+    </select>
+</mapper>

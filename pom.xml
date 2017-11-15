@@ -126,12 +126,12 @@
       <version>1.0.0.GA</version>
     </dependency>
 
-    <!--&lt;!&ndash;log4j&ndash;&gt;-->
-    <!--<dependency>-->
-      <!--<groupId>log4j</groupId>-->
-      <!--<artifactId>log4j</artifactId>-->
-      <!--<version>1.2.14</version>-->
-    <!--</dependency>-->
+    <!--log4j-->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
 
   </dependencies>
   <build>

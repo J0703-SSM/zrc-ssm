@@ -6,6 +6,6 @@
     <mappers>
         <!-- 加载映射文件,采用包声明的方
             要求: 接口类与映射文件-->
-        <package name="com.xing.mapper"/>
+        <package name="com.xing.*.mapper"/>
     </mappers>
 </configuration>

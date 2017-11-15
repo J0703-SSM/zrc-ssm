@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xing.admin.mapper.AdminMapper">
+    <!-- 一对多 管理员 - 角色 -->
+    <resultMap id="rol_perMap"
+               type="com.xing.admin.domain.Admin">
+        <!--先定义管理员对象的基础属性-->
+        <id column="admId" property="admId"/>
+        <result column="admName" property="admName"/>
+        <result column="admLoginName" property="admLoginName"/>
+        <result column="admLoginPwd" property="admLoginPwd"/>
+        <result column="admPhone" property="admPhone"/>
+        <result column="admEmail" property="admEmail"/>
+        <result column="authorizationTime" property="authorizationTime"/>
+        <!-- 管理员一对多中的角色集合对象-->
+        <collection property="rolList"
+                    ofType="com.xing.role.domain.Role">
+            <!--对应的是角色详情的列-->
+            <id column="rolId" property="rolId"/>
+            <result column="rolName" property="rolName"/>
+            <result column="rolContent" property="rolContent"/>
+            <!-- 角色一对多的权限集合对象 -->
+            <collection property="perList" ofType="com.xing.role.domain.Permissions">
+                <id column="perId" property="perId"/>
+                <result column="perName" property="perName"/>
+                <result column="perContent" property="perContent"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <insert id="addAdmin"
+            parameterType="com.xing.admin.domain.Admin">
+        INSERT INTO admin
+        (admId,admName,admLoginName,admLoginPwd,admPhone,admEmail,authorizationTime)
+        VALUES
+        (#{admId},#{admName},#{admLoginName},#{admLoginPwd},#{admPhone},#{admEmail},#{authorizationTime})
+    </insert>
+    <insert id="addAdmin_Rol" parameterType="com.xing.admin.domain.Admin">
+        INSERT INTO adm_rol (admId,rolId) VALUES
+        <foreach collection="rolList" item="rol" separator=",">
+            (#{admId},#{rol.rolId})
+        </foreach>
+    </insert>
+    <select id="findAdminById"
+            parameterType="java.lang.String"
+            resultMap="rol_perMap">
+        SELECT * FROM
+        (SELECT * From adm_rol NATURAL JOIN admin NATURAL JOIN role) t
+        JOIN
+        (SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role) z
+        WHERE t.rolId=z.rolId AND admId=#{admId};
+    </select>
+    <select id="findAllAdmin"
+            resultMap="rol_perMap">
+        SELECT * FROM
+        (SELECT * From adm_rol NATURAL JOIN admin NATURAL JOIN role) t
+        JOIN
+        (SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role) z
+        WHERE t.rolId=z.rolId
+    </select>
+</mapper>

@@ -28,6 +28,8 @@ To change this template use File | Settings | File Templates.
                     divResult.style.display = "none";
             }
             $(document).ready(function () {
+                $(".error_msg").innerHTML = "";
+                $(".error_msg:empty").hide();
                 $.ajax({
                     url:"/admin/findAllRol",
                     type: "get",
@@ -73,37 +75,37 @@ To change this template use File | Settings | File Templates.
                     <div class="input_info">
                         <input type="text" name="admName"/>
                         <span class="required">*</span>
-                        <div class="validate_msg_long">20长度以内的汉字、字母、数字的组合</div>
+                        <div class="validate_msg_long error_msg">${naError.defaultMessage}</div>
                     </div>
                     <div class="text_info clearfix"><span>管理员账号：</span></div>
                     <div class="input_info">
                         <input type="text" name="admLoginName"/>
                         <span class="required">*</span>
-                        <div class="validate_msg_long">30长度以内的字母、数字和下划线的组合</div>
+                        <div class="validate_msg_long error_msg">${lnError.defaultMessage}</div>
                     </div>
                     <div class="text_info clearfix"><span>密码：</span></div>
                     <div class="input_info">
                         <input type="password" name="admLoginPwd"/>
                         <span class="required">*</span>
-                        <div class="validate_msg_long error_msg">30长度以内的字母、数字和下划线的组合</div>
+                        <div class="validate_msg_long error_msg">${lpError.defaultMessage}</div>
                     </div>
                     <div class="text_info clearfix"><span>重复密码：</span></div>
                     <div class="input_info">
                         <input type="password" name="admLoginPwd2"  />
                         <span class="required">*</span>
-                        <div class="validate_msg_long error_msg">两次密码必须相同</div>
+                        <div class="validate_msg_long error_msg">${lp2Error}</div>
                     </div>      
                     <div class="text_info clearfix"><span>电话：</span></div>
                     <div class="input_info">
                         <input type="text" name="admPhone" class="width200"/>
                         <span class="required">*</span>
-                        <div class="validate_msg_medium error_msg">正确的电话号码格式：手机或固话</div>
+                        <div class="validate_msg_medium error_msg">${phError.defaultMessage}</div>
                     </div>
                     <div class="text_info clearfix"><span>Email：</span></div>
                     <div class="input_info">
                         <input type="text" name="admEmail" class="width200"/>
                         <span class="required">*</span>
-                        <div class="validate_msg_medium error_msg">50长度以内，正确的 email 格式</div>
+                        <div class="validate_msg_medium error_msg">${emError.defaultMessage}</div>
                     </div>
                     <div class="text_info clearfix"><span>角色：</span></div>
                     <div class="input_info_high">
@@ -112,7 +114,7 @@ To change this template use File | Settings | File Templates.
                             </ul>
                         </div>
                         <span class="required">*</span>
-                        <div class="validate_msg_tiny error_msg">至少选择一个</div>
+                        <div class="validate_msg_tiny error_msg">${rolError}</div>
                     </div>
                     <div class="button_info clearfix">
                         <input type="submit" value="保存" class="btn_save" onclick="showResult();" />

@@ -30,7 +30,4 @@
         <!-- 处理所有带斜杠的请求 -->
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>WEB-INF/pages/login.jsp</welcome-file>
-    </welcome-file-list>
 </web-app>
