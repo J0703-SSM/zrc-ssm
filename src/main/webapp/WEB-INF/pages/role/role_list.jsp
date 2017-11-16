@@ -99,8 +99,7 @@ To change this template use File | Settings | File Templates.
             </c:choose>
             <c:choose>
                 <c:when test="${pg.totalPage < 9}">
-                    <c:set var="begin" value="-1"/>
-                    <c:out value="${begin}"/>
+                    <c:set var="begin" value="1"/>
                     <c:set var="end" value="${pg.totalPage}"/>
                 </c:when>
                 <c:otherwise>
@@ -108,7 +107,7 @@ To change this template use File | Settings | File Templates.
                     <c:set var="end" value="${pg.pageCode + 4}"/>
                     <%-- 头溢出 --%>
                     <c:if test="${begin < 1}">
-                        <c:set var="begin" value="-1"/>
+                        <c:set var="begin" value="1"/>
                         <c:set var="end" value="9"/>
                     </c:if>
                     <%-- 尾溢出 --%>
@@ -118,17 +117,16 @@ To change this template use File | Settings | File Templates.
                     </c:if>
                 </c:otherwise>
             </c:choose>
-            <%-- ??? 我的天,错哪了 --%>
-            <%--<c:forEach begin="${begin}" end="${end}" step="1" var="i">--%>
-                <%--<c:choose>--%>
-                    <%--<c:when test="${pg.pageCode eq i}">--%>
-                        <%--[${i}]--%>
-                    <%--</c:when>--%>
-                    <%--<c:otherwise>--%>
-                        <%--<a href="<c:url value="/role/role_list?pageCode=${i}"/>">${i}</a>--%>
-                    <%--</c:otherwise>--%>
-                <%--</c:choose>--%>
-            <%--</c:forEach>--%>
+            <c:forEach begin="${begin}" end="${end}" var="i">
+                <c:choose>
+                    <c:when test="${pg.pageCode eq i}">
+                        [${i}]
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value="/role/role_list?pageCode=${i}"/>">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
             <c:choose>
                 <c:when test="${pg.pageCode < pg.totalPage}">
                     <a href="<c:url value="/role/role_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>

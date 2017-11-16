@@ -1,4 +1,6 @@
-﻿<%--
+﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%--
 Created by IntelliJ IDEA.
 User: lizhongren1
 Date: 2017/5/12
@@ -6,38 +8,96 @@ Time: 上午11:46
 To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isELIgnored="false" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title></title>
         <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global.css" />
         <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global_color.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="../../../demo/w2ui-1.5.rc1.min.css" />
+        <script type="text/javascript" src="../../../demo/w2ui-1.5.rc1.min.js"></script>
+        <script src="../../../js/jquery-3.2.1.js"></script>
         <script language="javascript" type="text/javascript">
             //排序按钮的点击事件
-            function sort(btnObj) {
-                if (btnObj.className == "sort_desc")
-                    btnObj.className = "sort_asc";
-                else
-                    btnObj.className = "sort_desc";
-            }
 
+            $(document).ready(function () {
+//                function addInfoInTable(data) {
+//                    var table = $("#datalist");
+//                    table  += "<tr class='info'>"
+//                            +"<td>"+data.feeId+"</td>"
+//                            +"<td><a href='fee_detail.jsp'>"+data.feeName+"</td>"
+//                            +"</tr>";
+//                }
+                $(".sort_asc").click(function () {
+                    if (this.className  == "sort_desc"){
+                        this.className  = "sort_asc";
+                        $("#sortT").val("ascT");
+                        $("#sortC").val("ascC");
+//                        var arr =   $(".info");
+//                        arr.sort(function(a,b){
+//                            return a.htmlText>b.htmlText?1:-1;
+//                        });//对li进行排序，这里按照从小到大排序
+                        $("#info").empty().append(arr);//清空原来内容添加排序后内容。
+//                        $.ajax({
+//                            url:"/fee/order",
+//                            type:"get",
+//                            async: false,
+//                            dataType: "json",
+//                            success:function (posts) {
+//                                $(".info").empty();
+//                            }
+//                        })
+                    }
+                    else {
+                        this.className = "sort_desc";
+                        $("#sortT").val("descT");
+                        $("#sortC").val("descC");
+                    }
+                });
+            });
             //启用
-            function startFee() {
+            function startFee(feeId) {
                 var r = window.confirm("确定要启用此资费吗？资费启用后将不能修改和删除。");
+                $.ajax({
+                    url:"/fee/fee_open",
+                    type:"get",
+                    async: false,
+                    data:{feeId : feeId},
+                    dataType: "json",
+                    success:function (posts) {
+                        var _html = $("#operate_result_info").html();
+                        _html += posts["msg"];
+                        $("#operate_result_info").html(_html);
+                    }
+                });
                 document.getElementById("operate_result_info").style.display = "block";
             }
             //删除
-            function deleteFee() {
+            function deleteFee(feeId) {
                 var r = window.confirm("确定要删除此资费吗？");
+                $.ajax({
+                    url:"/fee/fee_delete",
+                    type:"get",
+                    async: false,
+                    data:{feeId : feeId},
+                    dataType: "json",
+                    success:function (posts) {
+                        var _html = $("#operate_result_info").html();
+                        _html += posts["msg"];
+                        $("#operate_result_info").html(_html);
+                    }
+                });
+                $("#"+feeId).style.display = "none";
                 document.getElementById("operate_result_info").style.display = "block";
             }
-        </script>        
+        </script>
     </head>
     <body>
         <!--Logo区域开始-->
         <div id="header">
             <img src="../../../images/logo.png" alt="logo" class="left"/>
-            <a href="#">[退出]</a>            
+            <a href="#">[退出]</a>
         </div>
         <!--Logo区域结束-->
         <!--导航区域开始-->
@@ -58,23 +118,28 @@ To change this template use File | Settings | File Templates.
         <!--导航区域结束-->
         <!--主要区域开始-->
         <div id="main">
-            <form action="" method="">
+            <form action="/fee/fee_list" method="post">
                 <!--排序-->
                 <div class="search_add">
                     <div>
                         <!--<input type="button" value="月租" class="sort_asc" onclick="sort(this);" />-->
-                        <input type="button" value="基费" class="sort_asc" onclick="sort(this);" />
-                        <input type="button" value="时长" class="sort_asc" onclick="sort(this);" />
+                        <input type="button" name="column" value="基费" class="sort_asc"/>
+                        <input type="button" name="column" value="时长" class="sort_asc"/>
+                        <%--<c:if test="${sorts == null}">--%>
+                            <%--<input type="hidden" name="sort" value="ascC" id="sortC"/>--%>
+                            <%--<input type="hidden" name="sort" value="ascT" id="sortT"/>--%>
+                        <%--</c:if>--%>
+                        <%--<input type="hidden" name="sort" value="${sorts[0]}" id="sortC"/>--%>
+                        <%--<input type="hidden" name="sort" value="${sorts[1]}" id="sortT"/>--%>
                     </div>
                     <input type="button" value="增加" class="btn_add" onclick="location.href='/fee/fee_add';" />
-                </div> 
+                </div>
                 <!--启用操作的操作提示-->
                 <div id="operate_result_info" class="operate_success">
                     <img src="../../../images/close.png" onclick="this.parentNode.style.display='none';" />
-                    删除成功！
-                </div>    
-                <!--数据区域：用表格展示数据-->     
-                <div id="data">            
+                </div>
+                <!--数据区域：用表格展示数据-->
+                <div id="data">
                     <table id="datalist">
                         <tr>
                             <th>资费ID</th>
@@ -86,34 +151,46 @@ To change this template use File | Settings | File Templates.
                             <th>开通时间</th>
                             <th class="width50">状态</th>
                             <th class="width200"></th>
-                        </tr>                      
-                        <tr>
-                            <td>1</td>
-                            <td><a href="fee_detail.jsp">包 20 小时</a></td>
-                            <td>20 小时</td>
-                            <td>24.50 元</td>
-                            <td>3.00 元/小时</td>
-                            <td>2013/01/01 00:00:00</td>
-                            <td></td>
-                            <td>暂停</td>
-                            <td>                                
-                                <input type="button" value="启用" class="btn_start" onclick="startFee();" />
-                                <input type="button" value="修改" class="btn_modify" onclick="location.href='fee_modi.jsp';" />
-                                <input type="button" value="删除" class="btn_delete" onclick="deleteFee();" />
-                            </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><a href="fee_detail.jsp">包 40 小时</a></td>
-                            <td>40 小时</td>
-                            <td>40.50 元</td>
-                            <td>3.00 元/小时</td>
-                            <td>2013/01/21 00:00:00</td>
-                            <td>2013/01/23 00:00:00</td>
-                            <td>开通</td>
-                            <td>                                
-                            </td>
-                        </tr>
+                        <div id="info">
+                        <c:forEach items="${fees}" var="fee">
+                            <tr id="${fee.feeId}">
+                                <td>${fee.feeId}</td>
+                                <td><a href="fee_detail.jsp">${fee.feeName}</a></td>
+                                <td id="basicTime">
+                                    <c:if test="${fee.basicTime != null}">
+                                        ${fee.basicTime} 小时
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <c:if test="${fee.basicCost != null}">
+                                        ${fee.basicCost} 元
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <c:if test="${fee.unitCost != null}">
+                                        ${fee.unitCost} 元/小时
+                                    </c:if>
+                                </td>
+                                <td><fmt:formatDate value="${fee.newTime}" pattern="yyyy-MM-dd"/></td>
+                                <td><fmt:formatDate value="${fee.openTime}" pattern="yyyy-MM-dd"/></td>
+                                <c:choose>
+                                    <c:when test="${fee.state == 0}">
+                                        <td>暂未启用</td>
+                                        <td>
+                                            <input type="button" value="启用" class="btn_start" onclick="startFee(${fee.feeId});" />
+                                            <input type="button" value="修改" class="btn_modify" onclick="location.href='fee_modi.jsp';" />
+                                            <input type="button" value="删除" class="btn_delete" onclick="deleteFee(${fee.feeId});" />
+                                        </td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td>已启用</td>
+                                    </c:otherwise>
+                                </c:choose>
+
+                            </tr>
+                        </c:forEach>
+                        </div >
                     </table>
                     <p>业务说明：<br />
                     1、创建资费时，状态为暂停，记载创建时间；<br />
@@ -124,13 +201,54 @@ To change this template use File | Settings | File Templates.
                 </div>
                 <!--分页-->
                 <div id="pages">
-        	        <a href="#">上一页</a>
-                    <a href="#" class="current_page">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">下一页</a>
+                    第${pg.pageCode}页/共${pg.totalPage}页
+                    <a href="<c:url value="/fee/fee_list?method=${pg.url}&pageCode=1"/>">首页</a>
+                    <c:choose>
+                        <c:when test="${pg.pageCode > 1}">
+                            <a href="<c:url value="/fee/fee_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
+                        </c:when>
+                        <c:otherwise>
+                            上一页
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${pg.totalPage < 9}">
+                            <c:set var="begin" value="1"/>
+                            <c:set var="end" value="${pg.totalPage}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="begin" value="${pg.pageCode - 4}"/>
+                            <c:set var="end" value="${pg.pageCode + 4}"/>
+                            <%-- 头溢出 --%>
+                            <c:if test="${begin < 1}">
+                                <c:set var="begin" value="1"/>
+                                <c:set var="end" value="9"/>
+                            </c:if>
+                            <%-- 尾溢出 --%>
+                            <c:if test="${end > pg.totalPage}">
+                                <c:set var="begin" value="${pg.totalPage-8}"/>
+                                <c:set var="end" value="${pg.totalPage}"/>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:forEach begin="${begin}" end="${end}" var="i">
+                        <c:choose>
+                            <c:when test="${pg.pageCode eq i}">
+                                [${i}]
+                            </c:when>
+                            <c:otherwise>
+                                <a href="<c:url value="/fee/fee_list?pageCode=${i}"/>">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${pg.pageCode < pg.totalPage}">
+                            <a href="<c:url value="/fee/fee_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
+                        </c:when>
+                        <c:otherwise>
+                            下一页
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </form>
         </div>

@@ -54,5 +54,4 @@ public class RoleServiceImpl implements RoleService {
         pageBean.setBeanList(roleMapper.findAllRoleByPage(pageBean));
         return pageBean;
     }
-
 }

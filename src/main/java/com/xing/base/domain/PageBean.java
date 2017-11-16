@@ -11,7 +11,7 @@ public class PageBean<T> {
     /**总记录数*/
     private int totalRecode;
     /**每页记录数*/
-    private int pageSize = 5;
+    private int pageSize = 3;
     /**当前页记录数据*/
     private List<T> beanList;
     /**当前页码开始条数*/

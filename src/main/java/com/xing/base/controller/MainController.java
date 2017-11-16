@@ -2,6 +2,8 @@ package com.xing.base.controller;
 
 import com.xing.admin.domain.Admin;
 import com.xing.base.domain.PageBean;
+import com.xing.fee.domain.Fee;
+import com.xing.fee.service.FeeService;
 import com.xing.role.domain.Role;
 import com.xing.admin.service.AdminService;
 import com.xing.role.service.RoleService;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,6 +27,9 @@ public class MainController {
     @Qualifier("adminService")
     @Autowired
     private AdminService adminService;
+    @Qualifier("feeService")
+    @Autowired
+    private FeeService feeService;
     /**
      * 登录之后显示主页面
      */
@@ -49,7 +55,6 @@ public class MainController {
         pg = roleService.findAllRoleByPage(pg);
         model.addAttribute("roles",pg.getBeanList());
         model.addAttribute("pg",pg);
-        System.out.println(pg.getTotalPage());
         return "role/role_list";
     }
 
@@ -67,7 +72,14 @@ public class MainController {
      * 资费管理界面
      */
     @RequestMapping(value ="/fee/fee_list")
-    public String fee_list(){
+    public String fee_list(PageBean<Fee> pg,Model model){
+        // 每次进入资费管理界面,加载所有的资费信息进行显示
+        if (pg.getPageCode() == 0){
+            pg.setPageCode(1);
+        }
+        pg = feeService.findAllFeeByPage(pg);
+        model.addAttribute("fees",pg.getBeanList());
+        model.addAttribute("pg",pg);
         return "fee/fee_list";
     }
     /**
@@ -124,5 +136,4 @@ public class MainController {
         }
         return Integer.parseInt(pageCode);
     }
-
 }

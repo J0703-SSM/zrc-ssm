@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by dllo on 17/11/15.
  */
-public class Fee {
+public class Fee3 {
     /**资费Id*/
     private int feeId;
     /**
@@ -32,16 +32,12 @@ public class Fee {
     @NotBlank(message = "名称不能为空")
     private String feeName;
     /**基本时长*/
-    @Pattern(regexp = "^[1-9]\\d*$",message = "请输入1-600之间的整数")
-    @Range(min = 1,max = 600,message = "请输入1-600之间的整数")
     private String basicTime;
     /**基本费用*/
-    @Range(min = 0,max = 99999,message = "请输入0-99999之间的数")
-    @Pattern(regexp = "^([1-9]\\d*|0)(\\.\\d{1,2})?$",message = "保留两位小数,且不能为0")
     private String basicCost;
     /**单位费用*/
-    @Range(min = 0,max = 99999,message = "请输入0-99999之间的数,且不能为0")
     @Pattern(regexp = "^([1-9]\\d*|0)(\\.\\d{1,2})?$",message = "保留两位小数,且不能为0")
+    @Range(min = 0,max = 99999,message = "请输入0-99999之间的数")
     private String unitCost;
     /**创建时间*/
     private Date newTime;
@@ -50,7 +46,7 @@ public class Fee {
     /**资费说明*/
     private String content;
 
-    public Fee() {
+    public Fee3() {
     }
 
     @Override
