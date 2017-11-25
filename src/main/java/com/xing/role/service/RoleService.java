@@ -12,7 +12,9 @@ public interface RoleService {
     void addRole(Role role);
     void updateRole(Role role);
     void deleteAllRole_Per(String rolId);
+    int deleteRolById(String rolId);
     List<Role> findAllRole();
+    List<Role> findRolesByAId(String admId);
     Role findRoleById(String rolId);
     PageBean<Role> findAllRoleByPage(PageBean<Role> pageBean);
 }

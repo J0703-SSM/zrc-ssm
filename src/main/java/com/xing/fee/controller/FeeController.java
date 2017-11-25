@@ -1,6 +1,5 @@
 package com.xing.fee.controller;
 
-import com.xing.base.response.AjaxLoginResult;
 import com.xing.fee.domain.Fee;
 import com.xing.fee.domain.Fee2;
 import com.xing.fee.domain.Fee3;

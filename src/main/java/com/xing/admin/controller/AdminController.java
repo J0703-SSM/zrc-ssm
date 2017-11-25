@@ -14,10 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * 管理员控制器
@@ -113,5 +111,54 @@ public class AdminController {
     @RequestMapping("/admin/findAllRol")
     public List<Role> findAllRole(){
         return roleService.findAllRole();
+    }
+
+    /**
+     * 删除管理员
+     */
+    @ResponseBody
+    @RequestMapping("/admin/admin_delete")
+    public Map<String, Object> deleteCost(String admId, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>(10);
+        Admin admin = (Admin) request.getServletContext().getAttribute("admin");
+        if (admId.equals(admin.getAdmId())){
+            map.put("msg", "删除失败,账号正使用中,请退出重试");
+            return map;
+        }
+        int result = adminService.deleteAdminById(admId);
+        if (result > 0) {
+            map.put("msg", "删除成功");
+        } else {
+            map.put("msg", "删除失败,数据已失效");
+        }
+        return map;
+    }
+    /**
+     * 进入管理员修改界面
+     */
+    @RequestMapping("/admin/admin_modi")
+    public String adminModi(String admId, Model model){
+        Admin admin = adminService.findAdminById(admId);
+        model.addAttribute("admin",admin);
+        return "admin/admin_modi";
+    }
+
+    /**
+     * 更新管理员
+     * @param admin 传过来带着更新信息的admin
+     * @param rolId 传过来的新权限的权限ID数组
+     * @return
+     */
+    @RequestMapping("/admin/admin_update")
+    public String updateAdmin(Admin admin,String[] rolId){
+        List<Role> roles = new ArrayList<Role>();
+        for (String s : rolId) {
+            Role role = roleService.findRoleById(s);
+            roles.add(role);
+        }
+        admin.setRolList(roles);
+        adminService.updateAdm(admin);
+
+        return "admin/admin_modi";
     }
 }

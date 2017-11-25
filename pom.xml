@@ -126,6 +126,13 @@
       <version>1.0.0.GA</version>
     </dependency>
 
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
     <!--&lt;!&ndash;log4j&ndash;&gt;-->
     <!--<dependency>-->
       <!--<groupId>log4j</groupId>-->

@@ -28,6 +28,10 @@
 
     <!-- springmvc第一条: 将静态的处理交由web服务器自己处理,springmvc不处理 -->
     <mvc:default-servlet-handler/>
+    <!-- 配置静态资源对应的路径,告诉springmvc不用处理这些路径 -->
+    <!--<mvc:resources mapping="/js/**" location="/js"/>-->
+    <!--<mvc:resources mapping="/images/**" location="/images"/>-->
+    <!--<mvc:resources mapping="/styles/**" location="/styles"/>-->
 
     <!-- springmvc第二条: 配置视图解析规则 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -79,13 +83,16 @@
         <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
     </bean>
 
-
-    <!--&lt;!&ndash; 配置拦截器 &ndash;&gt;-->
-    <!--<mvc:interceptors>-->
-    <!--&lt;!&ndash; 拦截器执行的执行顺序依照下面的加入顺序执行 &ndash;&gt;-->
-    <!--<mvc:interceptor>-->
-    <!--<mvc:mapping path="/**"/>-->
-    <!--<bean class="com.xing.base.interceptor.LoginInterceptor"/>-->
-    <!--</mvc:interceptor>-->
-    <!--</mvc:interceptors>-->
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <!-- 登陆拦截所有方法 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.xing.base.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**"/>
+            <bean class="com.xing.admin.interceptor.AdminInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

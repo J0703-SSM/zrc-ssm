@@ -15,6 +15,7 @@ To change this template use File | Settings | File Templates.
     <title></title>
     <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global.css"/>
     <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global_color.css"/>
+    <script src="../../../js/jquery-3.2.1.js"></script>
     <script language="javascript" type="text/javascript">
         //显示角色详细信息
         function showDetail(flag, a) {
@@ -31,9 +32,27 @@ To change this template use File | Settings | File Templates.
             //document.getElementById("operate_result_info").style.display = "block";
         }
         //删除
-        function deleteAdmin() {
+        function deleteAdmin(admId) {
             var r = window.confirm("确定要删除此管理员吗？");
+            // 当点击取消时直接返回不执行语句
+            if (!r){
+                return;
+            }
+            $.ajax({
+                url:"/admin/admin_delete",
+                type:"get",
+                async: false,
+                data:{admId : admId},
+                dataType: "json",
+                success:function (posts) {
+                    var _html = $("#operate_result_info").html();
+                    _html += posts["msg"];
+                    $("#operate_result_info").html(_html);
+                }
+            });
             document.getElementById("operate_result_info").style.display = "block";
+            // 删除之后定时一秒刷新界面
+            setTimeout(function(){window.location.reload();},1000);
         }
         //全选
         function selectAdmins(inputObj) {
@@ -44,6 +63,32 @@ To change this template use File | Settings | File Templates.
                 }
             }
         }
+        $(document).ready(function () {
+            var $checkbox = $(".checkbox");
+            var $all = $("#all");
+            $all.click(function () {
+                if ($("#all").is(":checked")){
+                    for (var i = 0; i < $checkbox.length;i++){
+                        $checkbox[i].checked = true;
+                    }
+                }else {
+                    for (var i = 0; i < $checkbox.length;i++){
+                        $checkbox[i].checked = false;
+                    }
+                }
+
+            });
+            $checkbox.click(function () {
+                for (var i = 0; i < $checkbox.length;i++){
+                    if ($checkbox[i].checked){
+                        continue;
+                    }
+                    $all.prop("checked",false);
+                    return;
+                }
+                $all.prop("checked", true);
+            });
+        })
     </script>
 </head>
 <body>
@@ -57,15 +102,15 @@ To change this template use File | Settings | File Templates.
 <div id="navi">
     <ul id="menu">
         <li><a href="/index" class="index_on"></a></li>
-        <li><a href="/role/role_list" class="role_off"></a></li>
-        <li><a href="/admin/admin_list" class="admin_off"></a></li>
-        <li><a href="/fee/fee_list" class="fee_off"></a></li>
-        <li><a href="/account/account_list" class="account_off"></a></li>
-        <li><a href="/service/service_list" class="service_off"></a></li>
-        <li><a href="/bill/bill_list" class="bill_off"></a></li>
-        <li><a href="/report/report_list" class="report_off"></a></li>
-        <li><a href="/user/user_info" class="information_off"></a></li>
-        <li><a href="/user/user_modi_pwd" class="password_off"></a></li>
+        <li><a href="/role_list" class="role_off"></a></li>
+        <li><a href="/admin_list" class="admin_off"></a></li>
+        <li><a href="/fee_list" class="fee_off"></a></li>
+        <li><a href="/account_list" class="account_off"></a></li>
+        <li><a href="/service_list" class="service_off"></a></li>
+        <li><a href="/bill_list" class="bill_off"></a></li>
+        <li><a href="/report_list" class="report_off"></a></li>
+        <li><a href="/user_info" class="information_off"></a></li>
+        <li><a href="/user_modi_pwd" class="password_off"></a></li>
     </ul>
 </div>
 <!--导航区域结束-->
@@ -77,14 +122,10 @@ To change this template use File | Settings | File Templates.
             <div>
                 模块：
                 <select id="selModules" class="select_search">
-                    <option>全部</option>
-                    <option>角色管理</option>
-                    <option>管理员管理</option>
-                    <option>资费管理</option>
-                    <option>账务账号</option>
-                    <option>业务账号</option>
-                    <option>账单管理</option>
-                    <option>报表</option>
+                    <option value="-1">请选择模块</option>
+                   <c:forEach items="${pers}" var="per">
+                       <option name="perId" value="${per.perId}">${per.perName}</option>
+                   </c:forEach>
                 </select>
             </div>
             <div>角色：<input type="text" value="" class="text_search width200"/></div>
@@ -102,7 +143,7 @@ To change this template use File | Settings | File Templates.
             <table id="datalist">
                 <tr>
                     <th class="th_select_all">
-                        <input type="checkbox" onclick="selectAdmins(this);"/>
+                        <input type="checkbox" id="all"/>
                         <span>全选</span>
                     </th>
                     <th>管理员ID</th>
@@ -116,7 +157,7 @@ To change this template use File | Settings | File Templates.
                 </tr>
                 <c:forEach items="${admins}" var="admin">
                     <tr>
-                        <td><input type="checkbox"/></td>
+                        <td><input type="checkbox" class="checkbox"/></td>
                         <td>${admin.admId}</td>
                         <td>${admin.admName}</td>
                         <td>${admin.admLoginName}</td>
@@ -135,15 +176,18 @@ To change this template use File | Settings | File Templates.
                                         </c:forEach>
                                     </div>
                                 </c:when>
-                                <c:otherwise>
+                                <c:when test="${admin.rolList.size() == 1}">
                                     ${admin.rolList.get(0).rolName}
+                                </c:when>
+                                <c:otherwise>
+                                    尚未授予权限
                                 </c:otherwise>
                             </c:choose>
                         </td>
                         <td class="td_modi">
                             <input type="button" value="修改" class="btn_modify"
-                                   onclick="location.href='admin_modi.jsp';"/>
-                            <input type="button" value="删除" class="btn_delete" onclick="deleteAdmin();"/>
+                                   onclick="location.href='/admin/admin_modi?admId=${admin.admId}';"/>
+                            <input type="button" value="删除" class="btn_delete" onclick="deleteAdmin('${admin.admId}');"/>
                         </td>
                     </tr>
                 </c:forEach>
@@ -151,13 +195,54 @@ To change this template use File | Settings | File Templates.
         </div>
         <!--分页-->
         <div id="pages">
-            <a href="#">上一页</a>
-            <a href="#" class="current_page">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">下一页</a>
+            第${pg.pageCode}页/共${pg.totalPage}页
+            <a href="<c:url value="/admin_list?method=${pg.url}&pageCode=1"/>">首页</a>
+            <c:choose>
+                <c:when test="${pg.pageCode > 1}">
+                    <a href="<c:url value="/admin_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
+                </c:when>
+                <c:otherwise>
+                    上一页
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${pg.totalPage < 9}">
+                    <c:set var="begin" value="1"/>
+                    <c:set var="end" value="${pg.totalPage}"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="begin" value="${pg.pageCode - 4}"/>
+                    <c:set var="end" value="${pg.pageCode + 4}"/>
+                    <%-- 头溢出 --%>
+                    <c:if test="${begin < 1}">
+                        <c:set var="begin" value="1"/>
+                        <c:set var="end" value="9"/>
+                    </c:if>
+                    <%-- 尾溢出 --%>
+                    <c:if test="${end > pg.totalPage}">
+                        <c:set var="begin" value="${pg.totalPage-8}"/>
+                        <c:set var="end" value="${pg.totalPage}"/>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
+            <c:forEach begin="${begin}" end="${end}" var="i">
+                <c:choose>
+                    <c:when test="${pg.pageCode eq i}">
+                        [${i}]
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value="/admin_list?pageCode=${i}"/>">${i}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:choose>
+                <c:when test="${pg.pageCode < pg.totalPage}">
+                    <a href="<c:url value="/admin_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
+                </c:when>
+                <c:otherwise>
+                    下一页
+                </c:otherwise>
+            </c:choose>
         </div>
     </form>
 </div>

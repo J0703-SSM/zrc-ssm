@@ -14,11 +14,32 @@ To change this template use File | Settings | File Templates.
     <title></title>
     <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global.css"/>
     <link type="text/css" rel="stylesheet" media="all" href="../../../styles/global_color.css"/>
+    <script src="../../../js/jquery-3.2.1.js"></script>
     <script language="javascript" type="text/javascript">
-        function deleteRole() {
+        function deleteRole(rolId) {
             var r = window.confirm("确定要删除此角色吗？");
+            // 当点击取消时直接返回不执行语句
+            if (!r){
+                return;
+            }
+            $.ajax({
+                url:"/role/role_delete",
+                type:"get",
+                async: false,
+                data:{rolId : rolId},
+                dataType: "json",
+                success:function (posts) {
+                    var _html = $("#operate_result_info").html();
+                    _html += posts["msg"];
+                    $("#operate_result_info").html(_html);
+                }
+            });
             document.getElementById("operate_result_info").style.display = "block";
+            // 删除之后定时一秒刷新界面
+            setTimeout(function(){window.location.reload();},1000);
         }
+
+
     </script>
 </head>
 <body>
@@ -32,15 +53,15 @@ To change this template use File | Settings | File Templates.
 <div id="navi">
     <ul id="menu">
         <li><a href="/index" class="index_on"></a></li>
-        <li><a href="/role/role_list" class="role_off"></a></li>
-        <li><a href="/admin/admin_list" class="admin_off"></a></li>
-        <li><a href="/fee/fee_list" class="fee_off"></a></li>
-        <li><a href="/account/account_list" class="account_off"></a></li>
-        <li><a href="/service/service_list" class="service_off"></a></li>
-        <li><a href="/bill/bill_list" class="bill_off"></a></li>
-        <li><a href="/report/report_list" class="report_off"></a></li>
-        <li><a href="/user/user_info" class="information_off"></a></li>
-        <li><a href="/user/user_modi_pwd" class="password_off"></a></li>
+        <li><a href="/role_list" class="role_off"></a></li>
+        <li><a href="/admin_list" class="admin_off"></a></li>
+        <li><a href="/fee_list" class="fee_off"></a></li>
+        <li><a href="/account_list" class="account_off"></a></li>
+        <li><a href="/service_list" class="service_off"></a></li>
+        <li><a href="/bill_list" class="bill_off"></a></li>
+        <li><a href="/report_list" class="report_off"></a></li>
+        <li><a href="/user_info" class="information_off"></a></li>
+        <li><a href="/user_modi_pwd" class="password_off"></a></li>
     </ul>
 </div>
 <!--导航区域结束-->
@@ -54,7 +75,6 @@ To change this template use File | Settings | File Templates.
         <!--删除的操作提示-->
         <div id="operate_result_info" class="operate_success">
             <img src="../../../images/close.png" onclick="this.parentNode.style.display='none';"/>
-            删除成功！
         </div> <!--删除错误！该角色被使用，不能删除。-->
         <!--数据区域：用表格展示数据-->
         <div id="data">
@@ -79,7 +99,7 @@ To change this template use File | Settings | File Templates.
                                    value="修改"
                                    class="btn_modify"
                                    onclick="location.href='/role/role_modi?rolId=${role.rolId}';"/>
-                            <input type="button" value="删除" class="btn_delete"/>
+                            <input type="button" value="删除" class="btn_delete" onclick="deleteRole('${role.rolId}')"/>
                         </td>
                     </tr>
                 </c:forEach>
@@ -88,10 +108,10 @@ To change this template use File | Settings | File Templates.
         <!--分页-->
         <div id="pages">
             第${pg.pageCode}页/共${pg.totalPage}页
-            <a href="<c:url value="/role/role_list?method=${pg.url}&pageCode=1"/>">首页</a>
+            <a href="<c:url value="/role_list?method=${pg.url}&pageCode=1"/>">首页</a>
             <c:choose>
                 <c:when test="${pg.pageCode > 1}">
-                    <a href="<c:url value="/role/role_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
+                    <a href="<c:url value="/role_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
                 </c:when>
                 <c:otherwise>
                     上一页
@@ -123,13 +143,13 @@ To change this template use File | Settings | File Templates.
                         [${i}]
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value="/role/role_list?pageCode=${i}"/>">${i}</a>
+                        <a href="<c:url value="/role_list?pageCode=${i}"/>">${i}</a>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
             <c:choose>
                 <c:when test="${pg.pageCode < pg.totalPage}">
-                    <a href="<c:url value="/role/role_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
+                    <a href="<c:url value="/role_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
                 </c:when>
                 <c:otherwise>
                     下一页

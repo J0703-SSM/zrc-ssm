@@ -72,6 +72,7 @@ To change this template use File | Settings | File Templates.
                     }
                 });
                 document.getElementById("operate_result_info").style.display = "block";
+                setTimeout(function(){window.location.reload();},1000);
             }
             //删除
             function deleteFee(feeId) {
@@ -90,6 +91,8 @@ To change this template use File | Settings | File Templates.
                 });
                 $("#"+feeId).style.display = "none";
                 document.getElementById("operate_result_info").style.display = "block";
+                // 删除之后定时一秒刷新界面
+                setTimeout(function(){window.location.reload();},1000);
             }
         </script>
     </head>
@@ -104,15 +107,15 @@ To change this template use File | Settings | File Templates.
         <div id="navi">
             <ul id="menu">
                 <li><a href="/index" class="index_on"></a></li>
-                <li><a href="/role/role_list" class="role_off"></a></li>
-                <li><a href="/admin/admin_list" class="admin_off"></a></li>
-                <li><a href="/fee/fee_list" class="fee_off"></a></li>
-                <li><a href="/account/account_list" class="account_off"></a></li>
-                <li><a href="/service/service_list" class="service_off"></a></li>
-                <li><a href="/bill/bill_list" class="bill_off"></a></li>
-                <li><a href="/report/report_list" class="report_off"></a></li>
-                <li><a href="/user/user_info" class="information_off"></a></li>
-                <li><a href="/user/user_modi_pwd" class="password_off"></a></li>
+                <li><a href="/role_list" class="role_off"></a></li>
+                <li><a href="/admin_list" class="admin_off"></a></li>
+                <li><a href="/fee_list" class="fee_off"></a></li>
+                <li><a href="/account_list" class="account_off"></a></li>
+                <li><a href="/service_list" class="service_off"></a></li>
+                <li><a href="/bill_list" class="bill_off"></a></li>
+                <li><a href="/report_list" class="report_off"></a></li>
+                <li><a href="/user_info" class="information_off"></a></li>
+                <li><a href="/user_modi_pwd" class="password_off"></a></li>
             </ul>
         </div>
         <!--导航区域结束-->
@@ -185,6 +188,7 @@ To change this template use File | Settings | File Templates.
                                     </c:when>
                                     <c:otherwise>
                                         <td>已启用</td>
+                                        <td/>
                                     </c:otherwise>
                                 </c:choose>
 
@@ -202,10 +206,10 @@ To change this template use File | Settings | File Templates.
                 <!--分页-->
                 <div id="pages">
                     第${pg.pageCode}页/共${pg.totalPage}页
-                    <a href="<c:url value="/fee/fee_list?method=${pg.url}&pageCode=1"/>">首页</a>
+                    <a href="<c:url value="/fee_list?method=${pg.url}&pageCode=1"/>">首页</a>
                     <c:choose>
                         <c:when test="${pg.pageCode > 1}">
-                            <a href="<c:url value="/fee/fee_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
+                            <a href="<c:url value="/fee_list?pageCode=${pg.pageCode - 1}"/>">上一页</a>
                         </c:when>
                         <c:otherwise>
                             上一页
@@ -237,13 +241,13 @@ To change this template use File | Settings | File Templates.
                                 [${i}]
                             </c:when>
                             <c:otherwise>
-                                <a href="<c:url value="/fee/fee_list?pageCode=${i}"/>">${i}</a>
+                                <a href="<c:url value="/fee_list?pageCode=${i}"/>">${i}</a>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
                     <c:choose>
                         <c:when test="${pg.pageCode < pg.totalPage}">
-                            <a href="<c:url value="/fee/fee_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
+                            <a href="<c:url value="/fee_list?pageCode=${pg.pageCode + 1}"/>">下一页</a>
                         </c:when>
                         <c:otherwise>
                             下一页

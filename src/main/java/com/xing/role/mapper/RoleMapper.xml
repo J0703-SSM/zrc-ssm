@@ -37,6 +37,13 @@
     <select id="findRoleById" resultMap="rol_perMap">
         SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role WHERE rolId=#{rolId};
     </select>
+    <select id="findRolesByAId" parameterType="java.lang.String" resultMap="rol_perMap">
+        SELECT * FROM
+        (SELECT * FROM adm_rol WHERE admId=#{admId}) t
+        JOIN
+        (SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role) r
+        WHERE t.rolId= r.rolId;
+    </select>
     <delete id="deleteAllRole_Per" parameterType="java.lang.String">
         DELETE FROM rol_per WHERE rolId=#{rolId};
     </delete>
@@ -49,5 +56,11 @@
             resultType="int">
         SELECT count(*) FROM role;
     </select>
+    <delete id="deleteRolById" parameterType="java.lang.String">
+        DELETE FROM role WHERE rolId=#{rolId};
+    </delete>
+    <delete id="deleteAdmRolByRid" parameterType="java.lang.String">
+        DELETE FROM adm_rol WHERE rolId=#{rolId};
+    </delete>
 
 </mapper>

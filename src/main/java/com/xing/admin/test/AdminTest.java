@@ -1,6 +1,7 @@
 package com.xing.admin.test;
 
 import com.xing.admin.domain.Admin;
+import com.xing.base.domain.PageBean;
 import com.xing.role.domain.Permissions;
 import com.xing.role.domain.Role;
 import com.xing.admin.service.AdminService;
@@ -63,7 +64,7 @@ public class AdminTest {
             System.out.println(role);
             for (Permissions permissions : role.getPerList()) {
                 System.out.println(permissions);
-            }
+        }
         }
     }
 
@@ -72,7 +73,11 @@ public class AdminTest {
      */
     @Test
     public void findAll(){
-        List<Admin> admins = adminService.findAllAdmin();
+        PageBean<Admin> pg = new PageBean<Admin>();
+        pg.setPageCode(0);
+        pg.setStart(0);
+        pg.setPageSize(3);
+        List<Admin> admins = adminService.findAllAdmin(pg).getBeanList();
         for (Admin admin : admins) {
             System.out.println(admin);
             for (Role role : admin.getRolList()) {
@@ -82,6 +87,19 @@ public class AdminTest {
                 }
             }
         }
+    }
+
+    /**
+     * 更新测试
+     */
+    @Test
+    public void update(){
+        Admin admin = new Admin();
+        admin.setAdmId("81574b60");
+        admin.setAdmName("asd");
+        admin.setAdmPhone("12379");
+        admin.setAdmEmail("789852");
+        adminService.updateAdm(admin);
     }
 
 }

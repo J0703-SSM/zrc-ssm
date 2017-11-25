@@ -41,9 +41,24 @@ public interface RoleMapper {
     void updateRole(Role role);
 
     /**
-     * 删除全部权限
+     * 解除角色对应权限
      */
     void deleteAllRole_Per(String rolId);
+
+    /**
+     * 删除角色前解除拥有这个角色的管理员与之的关系
+     * @param rolId 传入的角色id
+     */
+    void deleteAdmRolByRid(String rolId);
+
+    int  deleteRolById(String rolId);
+
+    /**
+     * 根据管理员角色表查询出单个管理员的全部权限
+     * @param admId 传入的管理员ID
+     * @return 返回的带着权限信息的角色集合
+     */
+    List<Role> findRolesByAId(String admId);
 
     /**
      * 根据分页信息查询当页角色集合

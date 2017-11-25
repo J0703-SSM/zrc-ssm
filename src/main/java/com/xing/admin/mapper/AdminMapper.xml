@@ -52,6 +52,17 @@
         (SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role) z
         WHERE t.rolId=z.rolId AND admId=#{admId};
     </select>
+    <select id="findAdmById" parameterType="java.lang.String" resultType="com.xing.admin.domain.Admin">
+        SELECT * FROM admin WHERE admId=#{admId};
+    </select>
+    <select id="login" parameterType="java.lang.String"
+            resultMap="rol_perMap">
+        SELECT * FROM
+        (SELECT * From adm_rol NATURAL JOIN admin NATURAL JOIN role) t
+        JOIN
+        (SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role) z
+        WHERE t.rolId=z.rolId AND admLoginName=#{admLoginName};
+    </select>
     <select id="findAllAdmin"
             resultMap="rol_perMap">
         SELECT * FROM
@@ -60,4 +71,18 @@
         (SELECT * FROM rol_per NATURAL JOIN permissions NATURAL JOIN role) z
         WHERE t.rolId=z.rolId
     </select>
+    <select id="findAllAdm"
+            parameterType="com.xing.base.domain.PageBean"
+            resultType="com.xing.admin.domain.Admin">
+        SELECT * FROM admin LIMIT #{start},#{pageSize};
+    </select>
+    <delete id="deleteAdmRolById" parameterType="java.lang.String">
+        DELETE FROM adm_rol WHERE admId=#{admId}
+    </delete>
+    <delete id="deleteAdmById" parameterType="java.lang.String">
+        DELETE FROM admin WHERE admId=#{admId}
+    </delete>
+    <update id="updateAdm" parameterType="com.xing.admin.domain.Admin">
+        UPDATE admin SET admName=#{admName},admPhone=#{admPhone},admEmail=#{admEmail} WHERE admId=#{admId}
+    </update>
 </mapper>

@@ -76,6 +76,21 @@ public class RoleTest {
             }
         }
     }
+
+    /**
+     * 根据管理员ID查询管理员的所有权限
+     */
+    @Test
+    public void findRoleByAid(){
+        List<Role> roles = roleMapper.findRolesByAId("0a025ab6");
+        for (Role role : roles) {
+            System.out.println("***************");
+            System.out.println(role);
+            for (Permissions permissions : role.getPerList()) {
+                System.out.println(permissions);
+            }
+        }
+    }
     /**
      * 根据id查询role
      */
